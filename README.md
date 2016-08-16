@@ -1,0 +1,2 @@
+# WritingCalaulater
+quote myscript
