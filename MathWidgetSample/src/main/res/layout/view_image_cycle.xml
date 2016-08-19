@@ -10,6 +10,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/indication_area"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"

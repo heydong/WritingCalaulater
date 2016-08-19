@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         imageUrls.add(new ImageCycleView.ImageInfo(R.drawable.ad, "ad1", ""));
         imageUrls.add(new ImageCycleView.ImageInfo(R.drawable.ad, "ad2", ""));
         imageUrls.add(new ImageCycleView.ImageInfo(R.drawable.ad, "ad3", ""));
+        ads.setIndicationAvailable(false);
+        ads.setCycleDelayed(8000);
         ads.loadData(imageUrls, new ImageCycleView.LoadImageCallBack() {
             @Override
             public ImageView loadAndDisplay(ImageCycleView.ImageInfo imageInfo) {

@@ -1,2 +1,1 @@
-include ':myscript-certificate'
 include ':MathWidgetSample'

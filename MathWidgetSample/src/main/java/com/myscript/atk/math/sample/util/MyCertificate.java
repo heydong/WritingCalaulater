@@ -1,4 +1,4 @@
-package com.myscript.certificate;
+package com.myscript.atk.math.sample.util;
 
 /**
  * The <code>MyCertificate</code> class provides the bytes of the user

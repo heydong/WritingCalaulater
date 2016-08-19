@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MathWidgetSample/MathWidgetSample.iml" filepath="$PROJECT_DIR$/MathWidgetSample/MathWidgetSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/WritingCalaulater.iml" filepath="$PROJECT_DIR$/WritingCalaulater.iml" />
-      <module fileurl="file://$PROJECT_DIR$/myscript-certificate/myscript-certificate.iml" filepath="$PROJECT_DIR$/myscript-certificate/myscript-certificate.iml" />
     </modules>
   </component>
 </project>

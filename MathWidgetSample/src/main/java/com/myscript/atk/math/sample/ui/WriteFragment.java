@@ -18,11 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.myscript.atk.math.sample.R;
+import com.myscript.atk.math.sample.util.MyCertificate;
 import com.myscript.atk.math.sample.widget.MyHorizontalScrollView;
 import com.myscript.atk.math.sample.widget.MyScrollView;
 import com.myscript.atk.math.widget.MathWidget;
 import com.myscript.atk.math.widget.MathWidgetApi;
-import com.myscript.certificate.MyCertificate;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +50,6 @@ public class WriteFragment extends Fragment {
     long time = 0;
     float lastX = 0;
     float lastY = 0;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

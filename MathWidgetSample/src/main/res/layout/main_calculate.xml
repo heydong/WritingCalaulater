@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="right"
-        android:hint="请输入算式"
+        android:hint="0"
         android:maxLines="2"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
