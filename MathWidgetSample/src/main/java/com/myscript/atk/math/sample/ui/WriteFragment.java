@@ -112,7 +112,11 @@ public class WriteFragment extends Fragment {
                             height = scrollView.getHeight();
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
                             mathWidget.setLayoutParams(layoutParams);
-                            result_view.setText(mathWidget.getResultAsText());
+                            if ("".equals(mathWidget.getResultAsText())) {
+                                result_view.setText("算式记录");
+                            } else {
+                                result_view.setText("计算结果 " + mathWidget.getResultAsText());
+                            }
                         }
                     }
                 }, 1000);
