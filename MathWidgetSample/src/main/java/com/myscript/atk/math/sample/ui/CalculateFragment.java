@@ -1,18 +1,28 @@
 package com.myscript.atk.math.sample.ui;
 
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myscript.atk.math.sample.R;
+import com.myscript.atk.math.sample.adapter.MySimpleAdapter;
+import com.myscript.atk.math.sample.widget.MyGridView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import bsh.EvalError;
@@ -23,55 +33,26 @@ import butterknife.ButterKnife;
 /**
  * Created by hd_chen on 2016/8/15.
  */
-public class CalculateFragment extends Fragment implements View.OnClickListener {
+public class CalculateFragment extends Fragment {
 
     @Bind(R.id.result_view)
     TextView result;
     @Bind(R.id.result_last)
     TextView result_last;
-    @Bind(R.id.number0)
-    Button number0;
-    @Bind(R.id.number1)
-    Button number1;
-    @Bind(R.id.number2)
-    Button number2;
-    @Bind(R.id.number3)
-    Button number3;
-    @Bind(R.id.number4)
-    Button number4;
-    @Bind(R.id.number5)
-    Button number5;
-    @Bind(R.id.number6)
-    Button number6;
-    @Bind(R.id.number7)
-    Button number7;
-    @Bind(R.id.number8)
-    Button number8;
-    @Bind(R.id.number9)
-    Button number9;
-    @Bind(R.id.clear)
-    Button clear;
-    @Bind(R.id.add)
-    Button add;
-    @Bind(R.id.reduce)
-    Button reduce;
-    @Bind(R.id.multiply)
-    Button multiply;
-    @Bind(R.id.divide)
-    Button divide;
-    @Bind(R.id.opposite)
-    Button opposite;
-    @Bind(R.id.back)
-    Button back;
-    @Bind(R.id.point)
-    Button point;
-    @Bind(R.id.result)
-    Button calculate;
-    @Bind(R.id.delete)
-    Button delete;
+    @Bind(R.id.gridView)
+    MyGridView myGridView;
 
     boolean isClear = false; //用于是否显示器需要被清理
     Stack<String> expressions;
+    private String[] itemName = {
+            "AC", "del", "+/-", "%",
+            "7", "8", "9", "+",
+            "4", "5", "6", "-",
+            "1", "2", "3", "*",
+            "0", ".", "=", "/"};
+    private List<Map<String, Object>> data_list;
+    private SoundPool sp;
+    private int music;
 
     @Nullable
     @Override
@@ -79,27 +60,59 @@ public class CalculateFragment extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.main_calculate, container, false);
         ButterKnife.bind(this, view);
         expressions = new Stack<>();
-        number0.setOnClickListener(this);
-        number1.setOnClickListener(this);
-        number2.setOnClickListener(this);
-        number3.setOnClickListener(this);
-        number4.setOnClickListener(this);
-        number5.setOnClickListener(this);
-        number6.setOnClickListener(this);
-        number7.setOnClickListener(this);
-        number8.setOnClickListener(this);
-        number9.setOnClickListener(this);
-        point.setOnClickListener(this);
-        add.setOnClickListener(this);
-        divide.setOnClickListener(this);
-        reduce.setOnClickListener(this);
-        multiply.setOnClickListener(this);
-        result.setOnClickListener(this);
-        clear.setOnClickListener(this);
-        calculate.setOnClickListener(this);
-        opposite.setOnClickListener(this);
-        back.setOnClickListener(this);
-        delete.setOnClickListener(this);
+        fillGrid();
+        initSound();
+        myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                sp.play(music, 0.5f, 0.5f, 0, 0, 1);
+                String result_old = result.getText().toString();
+                switch (itemName[i]) {
+                    case "=":
+                        if (!isEmpty(result_old)) {
+                            String result_new = getRs(result_old);
+                            result.setText(result_new);
+                            if (result_new != null) {
+                                expressions.add(result_old);
+                            }
+                        }
+                        break;
+                    case "AC":
+                        result.setText(null);
+                        result_last.setText(result_old);
+                        break;
+//                    case "back":
+//                        if (!expressions.isEmpty()) {
+//                            result.setText(expressions.pop());
+//                        }
+//                        break;
+                    case "del":
+                        if (!"".equals(result_old))
+                            result.setText(result_old.substring(0, result_old.length() - 1));
+                        break;
+                    case "+/-":
+                        try {
+                            double d_result = Double.parseDouble(result_old);
+                            String new_result;
+                            if (result_old.startsWith("-")) {
+                                new_result = result_old.substring(1, result_old.length());
+                            } else {
+                                new_result = "-" + result_old;
+                            }
+                            result.setText(new_result);
+                        } catch (Exception e) {
+
+                        } finally {
+                            break;
+                        }
+                    default:
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append(result_old);
+                        stringBuilder.append(itemName[i]);
+                        result.setText(stringBuilder);
+                }
+            }
+        });
         return view;
     }
 
@@ -157,51 +170,32 @@ public class CalculateFragment extends Fragment implements View.OnClickListener 
         return (str == null || str.trim().length() == 0);
     }
 
-    @Override
-    public void onClick(View view) {
-        String result_old = result.getText().toString();
-        switch (view.getId()) {
-            case R.id.result:
-                if (!isEmpty(result_old)) {
-                    String result_new = getRs(result_old);
-                    result.setText(result_new);
-                    if (result_new != null) {
-                        expressions.add(result_old);
-                    }
-                }
-                break;
-            case R.id.clear:
-                result.setText(null);
-                result_last.setText(result_old);
-                break;
-            case R.id.back:
-                if (!expressions.isEmpty()) {
-                    result.setText(expressions.pop());
-                }
-                break;
-            case R.id.delete:
-                result.setText(result_old.substring(0, result_old.length() - 1));
-                break;
-            case R.id.opposite:
-                try {
-                    double d_result = Double.parseDouble(result_old);
-                    String new_result;
-                    if (result_old.startsWith("-")) {
-                        new_result = result_old.substring(1, result_old.length());
-                    } else {
-                        new_result = "-" + result_old;
-                    }
-                    result.setText(new_result);
-                } catch (Exception e) {
+    public void fillGrid() {
+        //新建List
+        data_list = new ArrayList<Map<String, Object>>();
+        //获取数据
+        getGridData();
+        //新建适配器
+        String[] from = {"text"};
+        int[] to = {R.id.tv_item};
+        MySimpleAdapter sim_adapter = new MySimpleAdapter(getActivity(), data_list, R.layout.gird_item, from, to);
+        //配置适配器
+        myGridView.setAdapter(sim_adapter);
+    }
 
-                } finally {
-                    break;
-                }
-            default:
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(result_old);
-                stringBuilder.append(((Button) view).getText().toString());
-                result.setText(stringBuilder);
+    public List<Map<String, Object>> getGridData() {
+        //cion和iconName的长度是相同的，这里任选其一都可以
+        for (int i = 0; i < itemName.length; i++) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("text", itemName[i]);
+            data_list.add(map);
         }
+
+        return data_list;
+    }
+
+    public void initSound(){
+        sp= new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
+        music = sp.load(getActivity(), R.raw.keysound, 1);
     }
 }

@@ -19,9 +19,12 @@ dependencies {
     compile(name: 'MyScript_ATK-Math-android-component', ext: 'aar')
     compile(name: 'MyScript_ATK-MathWidget-android-widget', ext: 'aar')
     compile(name: 'bsh-2.0b4', ext: 'jar')
+    compile(name: 'xUtils-2.6.14', ext: 'jar')
+    compile(name: 'android-smart-image-view-1.0.0', ext: 'jar')
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:support-v4:24.0.0'
     compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
