@@ -1,18 +1,22 @@
 package com.myscript.atk.math.sample.ui;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +46,8 @@ public class WriteFragment extends Fragment {
     ImageView drawOption;
     @Bind(R.id.options)
     RelativeLayout options;
+    @Bind(R.id.mathWidget_contain)
+    RelativeLayout mathWidget_contain;
 
     boolean isDrawing = true;
     int height;
@@ -75,12 +81,12 @@ public class WriteFragment extends Fragment {
             return view;
         }
         configuration = new Configuration();
-        configuration.orientation = Configuration.ORIENTATION_PORTRAIT;
+//        configuration.orientation = Configuration.ORIENTATION_PORTRAIT;
         WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
-        mathWidget.requestFocus();
+//        mathWidget.requestFocus();
         mathWidget.setLayoutParams(layoutParams);
         mathWidget.clearSearchPath();
         mathWidget.addSearchDir("zip://" + getActivity().getPackageCodePath() + "!/assets/conf/");
@@ -105,8 +111,9 @@ public class WriteFragment extends Fragment {
             @Override
             public void onRecognitionEnd(final MathWidgetApi mathWidgetApi) {
                 new Handler().postDelayed(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                     public void run() {
-                        if (time != 0 && System.currentTimeMillis() - time > 1000) {
+                        if (time != 0 && System.currentTimeMillis() - time > 1000 && MainActivity.type == 0) {
                             width = scrollView.getWidth();
                             height = scrollView.getHeight();
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -121,6 +128,25 @@ public class WriteFragment extends Fragment {
                 }, 1000);
             }
         });
+//        mathWidget_contain.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                switch (motionEvent.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        lastX = motionEvent.getX();
+//                        lastY = motionEvent.getY();
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//                        float x = lastX - motionEvent.getX();
+//                        float y = lastY - motionEvent.getY();
+//                        mathWidget_contain.scrollBy((int) x, (int) y);
+//                        lastX = motionEvent.getX();
+//                        lastY = motionEvent.getY();
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
         return view;
     }
 
@@ -136,22 +162,23 @@ public class WriteFragment extends Fragment {
                 width = scrollView.getWidth();
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
                 mathWidget.setLayoutParams(layoutParams);
+                FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(width, height);
+                mathWidget_contain.setLayoutParams(layoutParams1);
             }
         });
     }
 
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//        if (configuration.orientation != newConfig.orientation) {
-//            int temp = width;
-//            width = height;
-//            height = temp;
-//            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
-//            mathWidget.setLayoutParams(layoutParams);
-//            configuration.orientation = newConfig.orientation;
-//        }
-//    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (configuration.orientation != newConfig.orientation) {
+            height = scrollView.getHeight();
+            width = scrollView.getWidth();
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+            mathWidget.setLayoutParams(layoutParams);
+            configuration.orientation = newConfig.orientation;
+        }
+    }
 
     @OnClick(R.id.action_clear)
     public void clear() {
@@ -161,11 +188,13 @@ public class WriteFragment extends Fragment {
     @OnClick(R.id.action_redo)
     public void redo() {
         mathWidget.redo();
+//        mathWidget.scrollBy(-5, -5);
     }
 
     @OnClick(R.id.action_undo)
     public void undo() {
         mathWidget.undo();
+//        mathWidget.scrollBy(5, 5);
     }
 
     @OnClick(R.id.drawOption)

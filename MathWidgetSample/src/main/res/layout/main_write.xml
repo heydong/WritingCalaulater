@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clickable="true"
         card_view:cardUseCompatPadding="true">
 
@@ -14,15 +15,18 @@
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <com.myscript.atk.math.sample.widget.MyHorizontalScrollView
                 android:id="@+id/hScroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <RelativeLayout
+                    android:id="@+id/mathWidget_contain"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/repeat_bg">
@@ -40,11 +44,11 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_gravity="right"
-            android:gravity="right"
             android:layout_margin="5dp"
-            android:textColor="@color/textLight"
+            android:gravity="right"
             android:text="算式记录"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/textLight" />
 
         <RelativeLayout
             android:id="@+id/options"
@@ -64,26 +68,26 @@
                 android:id="@+id/action_clear"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:alpha="0.6"
                 android:layout_alignParentRight="true"
+                android:alpha="0.6"
                 android:src="@drawable/clear" />
 
             <ImageView
                 android:id="@+id/action_redo"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/action_clear"
                 android:alpha="0.6"
-                android:layout_marginRight="10dp"
                 android:src="@drawable/redo" />
 
             <ImageView
                 android:id="@+id/action_undo"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:alpha="0.6"
-                android:layout_toLeftOf="@+id/action_redo"
                 android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/action_redo"
+                android:alpha="0.6"
                 android:src="@drawable/undo" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
