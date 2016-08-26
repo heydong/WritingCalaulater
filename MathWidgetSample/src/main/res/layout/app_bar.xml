@@ -18,14 +18,14 @@
             android:background="@color/colorPrimary"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/setting"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/setting" />
+            <!--<ImageView-->
+                <!--android:id="@+id/setting"-->
+                <!--android:layout_width="22dp"-->
+                <!--android:layout_height="22dp"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:src="@drawable/setting" />-->
 
             <RadioGroup
                 android:id="@+id/rg"
@@ -63,14 +63,14 @@
                     android:textColor="@drawable/title_text_sel" />
             </RadioGroup>
 
-            <ImageView
-                android:id="@+id/history"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/history" />
+            <!--<ImageView-->
+                <!--android:id="@+id/history"-->
+                <!--android:layout_width="22dp"-->
+                <!--android:layout_height="22dp"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:src="@drawable/history" />-->
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

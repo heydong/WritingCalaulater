@@ -56,6 +56,8 @@ public class WriteFragment extends Fragment {
     long time = 0;
     float lastX = 0;
     float lastY = 0;
+    Handler handler;
+    Runnable runnable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,23 @@ public class WriteFragment extends Fragment {
             dlgAlert.create().show();
             return view;
         }
+        handler = new Handler();
+        runnable = new Runnable() {
+            //                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            public void run() {
+                if (time != 0 && System.currentTimeMillis() - time > 1000) {
+                    width = scrollView.getWidth();
+                    height = scrollView.getHeight();
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+                    mathWidget.setLayoutParams(layoutParams);
+                    if ("".equals(mathWidget.getResultAsText())) {
+                        result_view.setText("算式记录");
+                    } else {
+                        result_view.setText("计算结果 " + mathWidget.getResultAsText());
+                    }
+                }
+            }
+        };
         configuration = new Configuration();
 //        configuration.orientation = Configuration.ORIENTATION_PORTRAIT;
         WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
@@ -110,22 +129,7 @@ public class WriteFragment extends Fragment {
 
             @Override
             public void onRecognitionEnd(final MathWidgetApi mathWidgetApi) {
-                new Handler().postDelayed(new Runnable() {
-                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                    public void run() {
-                        if (time != 0 && System.currentTimeMillis() - time > 1000 && MainActivity.type == 0) {
-                            width = scrollView.getWidth();
-                            height = scrollView.getHeight();
-                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
-                            mathWidget.setLayoutParams(layoutParams);
-                            if ("".equals(mathWidget.getResultAsText())) {
-                                result_view.setText("算式记录");
-                            } else {
-                                result_view.setText("计算结果 " + mathWidget.getResultAsText());
-                            }
-                        }
-                    }
-                }, 1000);
+                handler.postDelayed(runnable, 1000);
             }
         });
 //        mathWidget_contain.setOnTouchListener(new View.OnTouchListener() {
@@ -147,12 +151,6 @@ public class WriteFragment extends Fragment {
 //                return false;
 //            }
 //        });
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         ViewTreeObserver vto = scrollView.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -166,6 +164,18 @@ public class WriteFragment extends Fragment {
                 mathWidget_contain.setLayoutParams(layoutParams1);
             }
         });
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
