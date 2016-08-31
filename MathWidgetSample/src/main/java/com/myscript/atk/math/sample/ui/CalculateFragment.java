@@ -72,6 +72,7 @@ public class CalculateFragment extends Fragment {
                         if (!isEmpty(result_old)) {
                             String result_new = getRs(result_old);
                             result.setText(result_new);
+                            result_last.setText(result_old);
                             if (result_new != null) {
                                 expressions.add(result_old);
                             }
